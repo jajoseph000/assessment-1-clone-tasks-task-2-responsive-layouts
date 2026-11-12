@@ -1,0 +1,263 @@
+/* =========================================================
+   1. DESIGN TOKENS (CSS custom properties)
+   Mobile values are the default. Media queries further down
+   only change the variables, so the rules don't need repeating.
+   ========================================================= */
+:root {
+  /* Brand palette */
+  --color-black: #070410;
+  --color-purple: #231651;
+  --color-teal: #4dccbd;
+  --color-yellow: #eef36a;
+  --color-white: #ffffff;
+
+  /* Spacing (mobile: 16 / 16) */
+  --space-small: 16px;
+  --space-large: 16px;
+
+  /* Typography */
+  --font-heading: "Teko", sans-serif;
+  --font-body: "Lato", sans-serif;
+  --logo-size: 2em;
+
+  /* Solid drop shadow offset to the bottom-right */
+  --shadow-offset: 8px;
+}
+
+/* Tablet: 720px and up */
+@media (min-width: 720px) {
+  :root {
+    --space-large: 32px;
+    --logo-size: 3em;
+  }
+}
+
+/* Desktop: 1024px and up */
+@media (min-width: 1024px) {
+  :root {
+    --space-large: 48px;
+  }
+}
+
+/* =========================================================
+   2. BASE STYLES
+   ========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 360px;
+  font-family: var(--font-body);
+  background-color: var(--color-purple);
+  color: var(--color-black);
+}
+
+h1,
+h2,
+button {
+  font-family: var(--font-heading);
+  font-weight: 500;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* =========================================================
+   3. BUTTON (shared by SEARCH and WATCH NOW)
+   Small spacing for padding and border radius.
+   ========================================================= */
+.button {
+  font-size: 2em;
+  line-height: 1;
+  text-transform: uppercase;
+  padding: calc(var(--space-small) / 2) var(--space-small);
+  padding-top: calc(var(--space-small) / 2 + 4px); /* Teko sits high; balance it */
+  border: 2px solid var(--color-black);
+  border-radius: var(--space-small);
+  background-color: var(--color-yellow);
+  color: var(--color-black);
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: var(--color-teal);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--color-teal);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   4. HEADER  (Flexbox: a single row of items)
+   Small spacing everywhere, large spacing between nav links.
+   ========================================================= */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-small);
+  padding: var(--space-small);
+  background-color: var(--color-black);
+  box-shadow: 0 var(--shadow-offset) 0 var(--color-teal);
+}
+
+.header__logo {
+  margin: 0;
+  font-size: var(--logo-size);
+  line-height: 1;
+  color: var(--color-white);
+}
+
+.header__logo-accent {
+  color: var(--color-teal);
+}
+
+/* Mobile: genre links are hidden */
+.header__nav {
+  display: none;
+}
+
+.header__nav-list {
+  display: flex;
+  gap: var(--space-large);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.header__nav-link {
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.header__nav-link:hover,
+.header__nav-link:focus-visible {
+  color: var(--color-yellow);
+  text-decoration: underline;
+}
+
+@media (min-width: 720px) {
+  .header__nav {
+    display: block;
+  }
+}
+
+/* =========================================================
+   5. MOVIE LIST  (Grid: a 2-D layout of cards)
+   Primary content container uses large spacing.
+   ========================================================= */
+.movie-list {
+  display: grid;
+  grid-template-columns: 1fr; /* mobile: one column */
+  gap: var(--space-large);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-large);
+  padding-top: calc(var(--space-large) + var(--shadow-offset));
+}
+
+@media (min-width: 720px) {
+  .movie-list {
+    grid-template-columns: repeat(2, 1fr); /* tablet: 2 columns, 3 rows */
+  }
+}
+
+/* =========================================================
+   6. MOVIE CARD  (Flexbox inside each card)
+   Each card uses small spacing.
+   ========================================================= */
+.movie-card {
+  display: flex;
+  flex-direction: column; /* poster on top, body below */
+  background-color: var(--color-white);
+  border: 2px solid var(--color-black);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-teal);
+}
+
+.movie-card__poster {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.movie-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* fill remaining card height so the button can sit at the bottom */
+  gap: var(--space-small);
+  padding: var(--space-small);
+}
+
+.movie-card__text {
+  font-size: 1.5em;
+}
+
+.movie-card__title {
+  margin: 0 0 calc(var(--space-small) / 2);
+  font-size: 1.5em;
+  line-height: 1;
+  color: var(--color-purple);
+}
+
+.movie-card__description {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.movie-card__button {
+  width: 100%;
+  margin-top: auto; /* pushes the button to the bottom of the card */
+}
+
+/* =========================================================
+   7. DESKTOP: different layout per row, using modifier classes
+   Grid stays 2 columns; some cards span both columns.
+   ========================================================= */
+@media (min-width: 1024px) {
+  /* Row 1: one large card, wide poster, text left + button right */
+  .movie-card--featured {
+    grid-column: 1 / -1;
+  }
+
+  .movie-card--featured .movie-card__poster {
+    aspect-ratio: 3 / 1;
+    object-position: center 25%;
+  }
+
+  .movie-card--featured .movie-card__body {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .movie-card--featured .movie-card__text {
+    flex: 1; /* text takes the free space, button keeps its size */
+  }
+
+  .movie-card--featured .movie-card__button {
+    width: auto;
+    flex-shrink: 0;
+    margin-top: 0;
+  }
+
+  /* Rows 3-5: full-width horizontal cards, poster left */
+  .movie-card--horizontal {
+    grid-column: 1 / -1;
+    flex-direction: row;
+  }
+
+  .movie-card--horizontal .movie-card__poster {
+    width: 50%;
+    border-right: 2px solid var(--color-black);
+  }
+
+  /* Row 2 cards have no modifier, so they keep the tablet layout */
+}
